@@ -115,7 +115,3 @@ Diploma in Computer Engineering Student
 Interested in Web Development, Django, and Software Development.
 
 ---
-
- 📄 License
-
-This project is created for learning and educational purposes.
