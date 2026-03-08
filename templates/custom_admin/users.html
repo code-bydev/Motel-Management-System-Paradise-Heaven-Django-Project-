@@ -1,0 +1,72 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block title %}Manage Users - Paradise Heaven Admin{% endblock %}
+
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>All Users</h3>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if users %}
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td><strong>{{ user.name }}</strong></td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if user.is_active %}
+                            <span class="badge badge-success">Active</span>
+                            {% else %}
+                            <span class="badge badge-danger">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                {% if user.is_active %}
+                                <a href="{% url 'toggle_user_status' user.id %}" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to deactivate this user?')">
+                                    <i class="fas fa-ban"></i> Deactivate
+                                </a>
+                                {% else %}
+                                <a href="{% url 'toggle_user_status' user.id %}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check"></i> Activate
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #6b7280; padding: 30px;">
+                            No users found.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

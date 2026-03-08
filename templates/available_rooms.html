@@ -1,0 +1,124 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+
+    <!-- ==========================
+        Available Rooms Section
+    =========================== -->
+    <section class="section__container">
+        <div class="section__header" style="text-align: center; margin-bottom: 40px;">
+            <h2>Available Rooms</h2>
+            <p>Check-in: {{ check_in }} | Check-out: {{ check_out }} | {{ adults }} Adults, {{ children }} Children</p>
+        </div>
+        
+        <div class="room__grid">
+            {% for room in available_rooms %}
+            <div class="room__card">
+                <div class="room__image">
+                    {% if room.room_image %}
+                    <img src="{{ room.room_image.url }}" alt="{{ room.room_name }}">
+                    {% else %}
+                    <img src="{% static 'static/assets/images/room-1.jpg' %}" alt="{{ room.room_name }}">
+                    {% endif %}
+                </div>
+                <div class="room__content">
+                    <h4>{{ room.room_name }}</h4>
+                    <p>{{ room.room_des|truncatechars:100 }}</p>
+                    <div class="room__facilities">
+                        {% for facility in room.room_facilities|split:"," %}
+                        <span><i class="ri-check-line"></i> {{ facility }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="room__footer">
+                        <span class="room__price">₹{{ room.room_price }} <small>/ night</small></span>
+                        <a href="{% url 'reservation' %}?room_id={{ room.id }}&check_in={{ check_in }}&check_out={{ check_out }}" class="btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if not available_rooms %}
+        <div style="text-align: center; padding: 50px;">
+            <h3>No rooms available for the selected dates</h3>
+            <p>Please try different dates or contact us for assistance.</p>
+            <a href="{% url 'index' %}" class="btn">Back to Home</a>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- ==========================
+        Booking Section (for new search)
+    =========================== -->
+    <section class="section__container booking__container">
+        <form method="post" class="booking__form" action="{% url 'index' %}">
+            {% csrf_token %}
+            
+            <!-- Check-in Date Input -->
+            <div class="input__group">
+                <span><i class="ri-calendar-2-fill"></i></span>
+                <div>
+                    <label for="check-in">CHECK-IN</label>
+                    <input type="date" id="check-in" name="check_in" value="{{ check_in }}">
+                </div>
+            </div>
+
+            <!-- Check-out Date Input -->
+            <div class="input__group">
+                <span><i class="ri-calendar-2-fill"></i></span>
+                <div>
+                    <label for="check-out">CHECK-OUT</label>
+                    <input type="date" id="check-out" name="check_out" value="{{ check_out }}">
+                </div>
+            </div>
+
+            <!-- Room / Guest Selector -->
+            <div class="input__group">
+                <span><i class="ri-bed-fill"></i></span>
+                <div>
+                    <label for="rooms-guests">ROOM / GUESTS</label>
+                    <div class="rooms-guests__dropdown" id="rooms-guests-dropdown">
+                        <button type="button" class="rooms-guests__summary" id="rooms-guests-summary">
+                            {{ rooms_needed }} Room, {{ adults }} Adults, {{ children }} Children
+                            <i class="ri-arrow-down-s-line dropdown-arrow"></i>
+                        </button>
+                        <div class="rooms-guests__details" id="rooms-guests-details">
+                            <div class="quantity">
+                                <div class="quantity__label">Rooms</div>
+                                <div class="quantity__controls">
+                                    <button type="button" class="quantity__minus" data-target="rooms">-</button>
+                                    <input type="number" id="rooms" name="rooms" value="{{ rooms_needed }}" min="1" max="10" readonly>
+                                    <button type="button" class="quantity__plus" data-target="rooms">+</button>
+                                </div>
+                            </div>
+                            <div class="quantity">
+                                <div class="quantity__label">Adults</div>
+                                <div class="quantity__controls">
+                                    <button type="button" class="quantity__minus" data-target="adults">-</button>
+                                    <input type="number" id="adults" name="adults" value="{{ adults }}" min="1" max="10" readonly>
+                                    <button type="button" class="quantity__plus" data-target="adults">+</button>
+                                </div>
+                            </div>
+                            <div class="quantity">
+                                <div class="quantity__label">Children</div>
+                                <div class="quantity__controls">
+                                    <button type="button" class="quantity__minus" data-target="children">-</button>
+                                    <input type="number" id="children" name="children" value="{{ children }}" min="0" max="10" readonly>
+                                    <button type="button" class="quantity__plus" data-target="children">+</button>
+                                </div>
+                            </div>
+                            <button type="button" class="dropdown-done-btn">Done</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <div class="input__group input__btn">
+                <button class="btn">CHECK AVAILABILITY</button>
+            </div>
+        </form>
+    </section>
+
+{% endblock %}
+

@@ -1,0 +1,276 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/booking.css' %}">
+    <style>
+        .room-details-sidebar {
+            display: none;
+        }
+        .room-details-sidebar.active {
+            display: block;
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+        }
+        .room-image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<main class="main-wrapper">
+
+    <!-- Sidebar with Room Details -->
+    <aside class="sidebar room-details-sidebar" id="roomDetails">
+        <div id="roomDetailsContent">
+            <h3>Room:</h3>
+            <p id="sidebarRoomName">{{ Rooms.room_name }}</p>
+            <h3>Price:</h3>
+            <p id="sidebarRoomPrice">₹{{ Rooms.room_price }}/night</p>
+            <h3>Description:</h3>
+            <p id="sidebarRoomDes">{{ Rooms.room_des }}</p>
+            <h3>Facilities:</h3>
+            <ul id="sidebarRoomFacilities">
+                {% for facility in Rooms.room_facilities.split %}
+                <li>{{ facility }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="loading-spinner" id="roomLoading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Loading room details...
+        </div>
+    </aside>
+
+    <!-- Booking Form -->
+    <div class="container">
+
+        <div class="form-card">
+            <h2>Hotel Reservation Form</h2>
+            <p>Please complete the form below to reserve your stay.</p>
+
+            <form method="post" action="{% url 'process_booking' %}">
+                {% csrf_token %}
+                <!-- Full Name -->
+                <div>
+                    <label for="firstName">Full Name</label>
+                    <div class="flex-row">
+                        <div>
+                            <input type="text" id="firstName" name="firstName" required value="{{ user.name|default:'' }}">
+                            <p class="small-text">First Name</p>
+                        </div>
+                        <div>
+                            <input type="text" id="lastName" name="lastName" required>
+                            <p class="small-text">Last Name</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div>
+                    <label for="address1">Address</label>
+                    <input type="text" id="address1" name="address1" required value="{{ user.address|default:'' }}">
+                    <p class="small-text">Street Address</p>
+                    <input type="text" id="address2" name="address2">
+                    <p class="small-text">Street Address Line 2</p>
+                    <div class="flex-row">
+                        <div>
+                            <input type="text" id="city" name="city" required value="{{ user.city|default:'' }}">
+                            <p class="small-text">City</p>
+                        </div>
+                        <div>
+                            <input type="text" id="state" name="state" required value="{{ user.state|default:'' }}">
+                            <p class="small-text">State / Province</p>
+                        </div>
+                    </div>
+                    <input type="text" id="postal" name="postal" required value="{{ user.postal_code|default:'' }}">
+                    <p class="small-text">Postal / Zip Code</p>
+                </div>
+
+                <!-- Phone and Email -->
+                <div class="flex-row">
+                    <div>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(000) 000-0000" required value="{{ user.phone|default:'' }}">
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="example@example.com" required value="{{ user.email|default:'' }}">
+                        <p class="small-text">example@example.com</p>
+                    </div>
+                </div>
+
+                <!-- Adults & Kids -->
+                <div class="flex-row">
+                    <div>
+                        <label for="adults">Number of Adults</label>
+                        <input type="number" id="adults" name="adults" required>
+                    </div>
+                    <div>
+                        <label for="kids">Number of Kids</label>
+                        <input type="number" id="kids" name="kids">
+                    </div>
+                </div>
+
+                <!-- Add spacing before Room section -->
+                <div class="section-divider"></div>
+
+                <!-- Room Details -->
+                <div class="flex-row">
+                    <div>
+                        <label for="roomname">Room Name</label>
+                        <select id="roomname" name="roomname" required onchange="fetchRoomDetails(this.value)">
+                            <option value="">Select a Room</option>
+                            {% for room in roomsdata %}
+                            <option value="{{ room.id }}" {% if Rooms.id == room.id %}selected{% endif %}>{{ room.room_name }} - ₹{{ room.room_price }}/night</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="numroom">Number of Rooms</label>
+                        <input type="number" id="numroom" name="numroom" value="1" min="1" max="10">
+                    </div>
+                </div>
+                
+                <!-- Check-In / Check-Out Dates -->
+                <div class="flex-row">
+                    <div>
+                        <label for="check_in">Check-In Date</label>
+                        <input type="date" id="check_in" name="check_in" required>
+                    </div>
+                    <div>
+                        <label for="check_out">Check-Out Date</label>
+                        <input type="date" id="check_out" name="check_out" required>
+                    </div>
+                </div>
+
+
+                <!-- Payment Summary -->
+                <div class="payment-summary" id="paymentSummary" style="display: none;">
+                    <h4><i class="ri-wallet-3-line"></i> Payment Summary</h4>
+                    <p><strong>Room Price:</strong> ₹<span id="roomPrice">0</span> / night</p>
+                    <p><strong>Number of Nights:</strong> <span id="numNights">0</span></p>
+                    <p><strong>Base Price:</strong> ₹<span id="basePrice">0</span></p>
+                    <p><strong>GST (18%):</strong> ₹<span id="gst">0</span></p>
+                    <p><strong>Total Amount:</strong> ₹<span id="totalAmount">0</span></p>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="ri-arrow-right-line"></i> Proceed to Payment
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Fetch room details via AJAX
+    function fetchRoomDetails(roomId) {
+        const roomDetailsSidebar = document.getElementById('roomDetails');
+        const roomLoading = document.getElementById('roomLoading');
+        const roomDetailsContent = document.getElementById('roomDetailsContent');
+        
+        if (!roomId) {
+            roomDetailsSidebar.classList.remove('active');
+            document.getElementById('paymentSummary').style.display = 'none';
+            return;
+        }
+        
+        // Show loading
+        roomDetailsSidebar.classList.add('active');
+        roomLoading.style.display = 'block';
+        roomDetailsContent.style.display = 'none';
+        
+        // Fetch room details from API
+        fetch(`/motel/api/room-details/?room_id=${roomId}`)
+            .then(response => response.json())
+            .then(data => {
+                roomLoading.style.display = 'none';
+                roomDetailsContent.style.display = 'block';
+                
+                if (data.success) {
+                    const room = data.room;
+                    
+                    // Update sidebar
+                    document.getElementById('sidebarRoomName').textContent = room.room_name;
+                    document.getElementById('sidebarRoomPrice').textContent = `₹${room.room_price}/night`;
+                    document.getElementById('sidebarRoomDes').textContent = room.room_des;
+                    
+                    // Update facilities
+                    const facilitiesList = document.getElementById('sidebarRoomFacilities');
+                    facilitiesList.innerHTML = '';
+                    room.room_facilities.forEach(facility => {
+                        const li = document.createElement('li');
+                        li.textContent = facility;
+                        facilitiesList.appendChild(li);
+                    });
+                    
+                    // Update payment summary
+                    calculatePayment();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching room details:', error);
+                roomLoading.style.display = 'none';
+                alert('Error fetching room details. Please try again.');
+            });
+    }
+    
+    // Calculate payment
+    function calculatePayment() {
+        const roomSelect = document.getElementById('roomname');
+        const checkIn = document.getElementById('check_in').value;
+        const checkOut = document.getElementById('check_out').value;
+        
+        if (!roomSelect.value || !checkIn || !checkOut) {
+            document.getElementById('paymentSummary').style.display = 'none';
+            return;
+        }
+        
+        // Fetch room price
+        fetch(`/motel/api/room-details/?room_id=${roomSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const roomPrice = data.room.room_price;
+                    
+                    // Calculate nights
+                    const startDate = new Date(checkIn);
+                    const endDate = new Date(checkOut);
+                    const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                    
+                    if (nights > 0) {
+                        const basePrice = roomPrice * nights;
+                        const gst = Math.round(basePrice * 0.18);
+                        const totalAmount = basePrice + gst;
+                        
+                        document.getElementById('roomPrice').textContent = roomPrice;
+                        document.getElementById('numNights').textContent = nights;
+                        document.getElementById('basePrice').textContent = basePrice;
+                        document.getElementById('gst').textContent = gst;
+                        document.getElementById('totalAmount').textContent = totalAmount;
+                        document.getElementById('paymentSummary').style.display = 'block';
+                    }
+                }
+            });
+    }
+    
+    // Add event listeners for date changes
+    document.getElementById('check_in').addEventListener('change', calculatePayment);
+    document.getElementById('check_out').addEventListener('change', calculatePayment);
+    
+    // Initialize on page load if room is pre-selected
+    document.addEventListener('DOMContentLoaded', function() {
+        const roomSelect = document.getElementById('roomname');
+        if (roomSelect.value) {
+            fetchRoomDetails(roomSelect.value);
+        }
+    });
+</script>
+{% endblock %}

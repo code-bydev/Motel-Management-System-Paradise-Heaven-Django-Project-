@@ -1,0 +1,52 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block title %}Edit Individual Room - Paradise Heaven Admin{% endblock %}
+
+{% block page_title %}Edit Individual Room{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>Edit Individual Room</h3>
+        <a href="{% url 'manage_individual_rooms' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Rooms
+        </a>
+    </div>
+    
+    <form method="POST" style="max-width: 600px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="room_type">Room Type *</label>
+            <select id="room_type" name="room_type" class="form-control" required>
+                {% for rt in room_types %}
+                <option value="{{ rt.id }}" {% if rt.id == room.room_type.id %}selected{% endif %}>
+                    {{ rt.room_name }} - ₹{{ rt.room_price }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_number">Room Number *</label>
+            <input type="number" id="room_number" name="room_number" class="form-control" value="{{ room.room_number }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="is_available" {% if room.is_available %}checked{% endif %}> Available for Booking
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Update Room
+            </button>
+            <a href="{% url 'manage_individual_rooms' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

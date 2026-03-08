@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Room - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            background-color: #1f2937;
+            color: white;
+            width: 250px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .sidebar-header h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar nav a:hover {
+            background-color: #374151;
+        }
+        .main-content {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #1f2937;
+            padding: 10px 20px;
+            color: white;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+        form label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+        form button {
+            background-color: #1f2937;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        form button:hover {
+            background-color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-hotel"></i>
+            <h1>Paradise Heaven</h1>
+        </div>
+        <nav>
+            <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard</a>
+            <a href="admin-rooms.html"><i class="fas fa-bed"></i>&nbsp; Rooms</a>
+            <a href="admin-user.html"><i class="fas fa-users"></i>&nbsp; Users</a>
+            <a href="settings.html"><i class="fas fa-cogs"></i>&nbsp; Settings</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="navbar">
+            <h1>ADMIN PANEL</h1>
+            <a href="admin-login.html">
+                <button>LOG OUT</button>
+            </a>
+        </div>
+
+        <div class="container">
+            <h2>Add New Room</h2>
+            <!-- enctype="multipart/form-data" -->
+            <form method="POST" >   
+                {% csrf_token %}
+                <label for="room_number">Room Number</label>
+                <input type="number" id="room_number" name="room_number" required>
+
+                <label for="room_name">Room Name</label>
+                <input type="text" id="room_name" name="room_name" required>
+
+                <label for="room_description">Room Description</label>
+                <textarea id="room_description" name="room_des" rows="4" required></textarea>
+
+                <label for="room_price">Room Price (INR)</label>
+                <input type="number" id="room_price" name="room_price" required>
+
+                <label for="room_image">Room Image</label>
+                <input type="file" id="room_image" name="room_image" accept="image/*" required>
+
+                <button type="submit"><i class="fas fa-plus"></i> Add Room</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

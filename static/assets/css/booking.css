@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+
+.container {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
+
+form {
+    margin-top: 24px;
+}
+
+.form-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.flex-row + .flex-row {
+    margin-top: 16px;
+}
+
+
+.section-divider {
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    color: #1e293b;
+    outline-offset: 2px;
+    outline-color: transparent;
+    transition: outline-color 0.2s ease;
+    font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline-color: #2563eb;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #2563eb;
+}
+
+.small-text {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 4px;
+    margin-bottom: 16px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+}
+
+.flex-row>div {
+    flex: 1 1 0;
+    min-width: 120px;
+}
+
+.time-inputs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 320px;
+}
+
+.time-inputs input[type="text"] {
+    width: 60px;
+    text-align: center;
+}
+
+.time-inputs select {
+    width: 60px;
+    cursor: pointer;
+    background: white;
+}
+
+.time-labels {
+    display: flex;
+    justify-content: space-between;
+    max-width: 320px;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 80px;
+    margin-top: 8px;
+    font-size: 1rem;
+    color: #1e293b;
+}
+
+.radio-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+    color: #94a3b8;
+}
+
+button[type="submit"] {
+    background-color: #0b1b56;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 48px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    margin: 40px auto 0;
+    transition: background-color 0.3s ease;
+    font-weight: 400;
+}
+
+button[type="submit"]:hover {
+    background-color: #0a1743;
+}
+.payment-summary {
+    margin-top: 32px;
+    padding: 20px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #f8fafc;
+}
+
+.payment-summary h4 {
+    margin-bottom: 16px;
+    color: #0b1b56;
+    font-size: 1.2rem;
+}
+
+.payment-summary p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+.btn {
+    background-color: #0b1b56;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    margin-top: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: #081340;
+}
+
+.main-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    flex-wrap: wrap;
+}
+
+.sidebar {
+    flex: 0 0 250px;
+    padding: 20px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.sidebar h3 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #0b1b56;
+}
+
+.sidebar ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 0;
+}
+
+
+
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+@media (max-width: 640px) {
+    .flex-row {
+        flex-direction: column;
+    }
+
+    .flex-row>div {
+        flex: 1 1 100%;
+        min-width: auto;
+    }
+
+    .radio-group {
+        gap: 40px;
+    }
+
+    .time-inputs,
+    .time-labels {
+        max-width: 100%;
+    }
+}
+}

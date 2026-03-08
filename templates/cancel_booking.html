@@ -1,0 +1,153 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <style>
+        .cancel-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .cancel-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .cancel-icon {
+            width: 80px;
+            height: 80px;
+            background: #fff3cd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: #856404;
+        }
+        
+        .booking-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .warning-box p {
+            color: #856404;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn-cancel {
+            padding: 12px 30px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-cancel:hover {
+            background: #c82333;
+        }
+        
+        .btn-back {
+            padding: 12px 30px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-back:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+
+<div class="cancel-container">
+    <div class="cancel-header">
+        <div class="cancel-icon">⚠️</div>
+        <h2>Cancel Booking</h2>
+        <p>Are you sure you want to cancel this booking?</p>
+    </div>
+    
+    <div class="booking-details">
+        <div class="detail-row">
+            <span><strong>Booking ID:</strong></span>
+            <span>#{{ booking.id }}</span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Room:</strong></span>
+            <span>{{ booking.roomname.room_name }}</span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Check-in:</strong></span>
+            <span>{{ booking.check_in|date:"d M Y" }}</span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Check-out:</strong></span>
+            <span>{{ booking.check_out|date:"d M Y" }}</span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Status:</strong></span>
+            <span>{{ booking.get_status_display }}</span>
+        </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ Important Notice</h4>
+        <p>Cancellation policy: Free cancellation up to 48 hours before check-in. After that, 50% of the total amount will be charged.</p>
+    </div>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn-cancel">Yes, Cancel Booking</button>
+            <a href="{% url 'user_profile' %}" class="btn-back">No, Go Back</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

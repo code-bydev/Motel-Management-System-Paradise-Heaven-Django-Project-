@@ -1,0 +1,66 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block title %}Edit Room - Paradise Heaven Admin{% endblock %}
+
+{% block page_title %}Edit Room Type{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>Edit Room Type</h3>
+        <a href="{% url 'manage_rooms' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Rooms
+        </a>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data" style="max-width: 600px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="room_name">Room Name *</label>
+            <input type="text" id="room_name" name="room_name" class="form-control" value="{{ room.room_name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_des">Description *</label>
+            <textarea id="room_des" name="room_des" class="form-control" rows="4" required>{{ room.room_des }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_price">Price per Night (₹) *</label>
+            <input type="number" id="room_price" name="room_price" class="form-control" value="{{ room.room_price }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_facilities">Facilities</label>
+            <input type="text" id="room_facilities" name="room_facilities" class="form-control" value="{{ room.room_facilities }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="number_of_rooms">Number of Rooms *</label>
+            <input type="number" id="number_of_rooms" name="number_of_rooms" class="form-control" value="{{ room.number_of_rooms }}" min="1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_image">Room Image</label>
+            {% if room.room_image %}
+            <div style="margin-bottom: 10px;">
+                <img src="{{ room.room_image.url }}" alt="{{ room.room_name }}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 4px;">
+            </div>
+            {% endif %}
+            <input type="file" id="room_image" name="room_image" class="form-control" accept="image/*">
+            <small style="color: #6b7280;">Leave empty to keep current image</small>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i> Update Room
+            </button>
+            <a href="{% url 'manage_rooms' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

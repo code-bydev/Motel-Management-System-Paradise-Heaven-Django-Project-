@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradise Heaven</title>
+
+    <link rel="icon" type="image/x-icon" href="/static/assets/images/logo.gif">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav__bar">
+            <div class="nav__header">
+                <div class="logo">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'assets/images/logo.gif' %}" alt="Paradise Heaven Logo" />
+                    </a>
+                    <span class="logo__text">Paradise Heaven</span>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'rooms_list' %}" class="{% if 'rooms' in request.path %}active{% endif %}">Rooms</a></li>
+                <li><a href="{% url 'contact' %}" class="{% if 'contact' in request.path %}active{% endif %}">Contact Us</a></li>
+                {% if request.session.user_id %}
+                <li class="avatar__wrapper">
+                    <a href="{% url 'user_profile' %}" class="avatar__circle">
+                        {{ request.session.user_name|slice:":1" }}
+                    </a>
+                    <ul class="avatar__dropdown">
+                        <li><a href="{% url 'user_profile' %}"><i class="ri-user-line"></i> My Profile</a></li>
+                        <li><a href="{% url 'logout' %}"><i class="ri-logout-box-line"></i> Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="login-btn"><i class="ri-login-box-line"></i> Login / Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <header class="header" id="home">
+        <div class="header__bg">
+            <img src="{% static 'assets/images/header.jpg' %}" alt="Paradise Heaven Header"
+                class="header__bg-img">
+        </div>
+        <div class="section__container header__container">
+            <p class="section__subheader">Welcome to Paradise Heaven</p>
+            <h1>The Perfect<br /><span>Base For You</span></h1>
+            <p>Experience luxury and comfort in the heart of paradise. Your unforgettable journey starts here.</p>
+            <button class="btn">Take A Tour</button>
+        </div>
+    </header>
+
+    {% block content %}
+
+    {% endblock %}
+
+    <footer class="footer">
+        <div class="section__container footer__container">
+            <div class="footer__col">
+                <div class="logo">
+                    <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo.gif' %}"
+                            alt="logo" /></a>
+                </div>
+                <p class="section__description">
+                    Discover a world of comfort, luxury, and adventure as you explore
+                    our curated selection of hotels, making every moment of your getaway
+                    truly extraordinary.
+                </p>
+                <div class="footer__socials">
+                    <a href="#"><i class="ri-facebook-fill"></i></a>
+                    <a href="#"><i class="ri-instagram-fill"></i></a>
+                    <a href="#"><i class="ri-twitter-fill"></i></a>
+                    <a href="#"><i class="ri-youtube-fill"></i></a>
+                </div>
+            </div>
+
+            <div class="footer__col">
+                <h4>QUICK LINKS</h4>
+                <ul class="footer__links">
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'rooms_list' %}">Rooms</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li class="user-menu">
+                        <div class="user-avatar">{{ request.user.name|slice:":1"|upper }}</div>
+                        <ul class="user-dropdown">
+                            <li><span>Hello, {{ request.user.name }}</span></li>
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login/Signup</a></li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+            <div class="footer__col">
+                <h4>OUR SERVICES</h4>
+                <ul class="footer__links">
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'rooms_list' %}">Rooms</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    {% if request.session.user_id %}
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Login/Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="footer__col">
+                <h4>CONTACT US</h4>
+                <ul class="footer__links">
+                    <li><a href="#">123 Paradise Street, Heaven City, HC 12345</a></li>
+                    <li><a href="#">+1 (123) 456-7890</a></li>
+                    <li><a href="#">paradiseheaven@info.com</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer__bar">
+            Copyright © 2025 Paradise Heaven. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        if (menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+                
+                const icon = menuBtn.querySelector('i');
+                if (navLinks.classList.contains('open')) {
+                    icon.classList.remove('ri-menu-line');
+                    icon.classList.add('ri-close-line');
+                } else {
+                    icon.classList.remove('ri-close-line');
+                    icon.classList.add('ri-menu-line');
+                }
+            });
+
+            const navLinksItems = navLinks.querySelectorAll('a');
+            navLinksItems.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('open');
+                    const icon = menuBtn.querySelector('i');
+                    icon.classList.remove('ri-close-line');
+                    icon.classList.add('ri-menu-line');
+                });
+            });
+        }
+
+        const navBar = document.querySelector('.nav__bar');
+        if (navBar) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navBar.classList.add('scrolled');
+                } else {
+                    navBar.classList.remove('scrolled');
+                }
+            });
+        }
+    </script>
+    <script src="{% static 'assets/js/script.js' %}"></script>
+
+</body>
+
+</html>
+
